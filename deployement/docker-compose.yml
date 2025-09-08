@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # OSCode Web Application
+  web:
+    build: .
+    container_name: oscode_web
+    restart: always
+    environment:
+      - PORT=8000
+      - ADMIN_PASSWORD=oscode2024
+      - PRESIDENT_PASSWORD=oscode2024
+      - VP_PASSWORD=oscode2024
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/backend/data
+      - ./backend/uploads:/app/backend/uploads
+    networks:
+      - oscode_network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: oscode_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - web
+    networks:
+      - oscode_network
+
+networks:
+  oscode_network:
+    driver: bridge

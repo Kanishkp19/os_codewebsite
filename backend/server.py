@@ -11,6 +11,8 @@ from datetime import datetime
 import shutil
 from pathlib import Path
 
+# Get port from environment (for Render)
+PORT = int(os.environ.get("PORT", 8000))
 # Initialize FastAPI app
 app = FastAPI(title="OSCode Platform API", version="1.0.0")
 
@@ -184,5 +186,4 @@ async def serve_frontend_routes(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
